@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+}
+
+.page{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+.footer {
+    background-color: grey;
+    text-align: center;
+    padding: 5px;
+}
