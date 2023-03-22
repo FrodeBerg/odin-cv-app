@@ -6,9 +6,31 @@ function App() {
   return (
     <div className='page'>
       <Header />
+      <div className='main'>
+        <Edit />
+        <Finished />
+      </div>
       <Footer />
     </div>
   );
+}
+class Finished extends React.Component {
+  render () {
+    return (
+      <div>
+
+      </div>
+    )
+  }
+}
+class Edit extends React.Component {
+  render() {
+    return (
+      <div>
+
+      </div>
+    )
+  }
 }
 
 class Header extends React.Component {
