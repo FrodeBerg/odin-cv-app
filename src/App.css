@@ -21,3 +21,18 @@ body {
     text-align: center;
     padding: 5px;
 }
+
+.main {
+    display: grid;
+    flex: 1;
+    grid-template: repeat(auto-fit, minmax(0px, 1fr)) / repeat(auto-fit, minmax(500px, 1fr));
+    overflow-y: auto;
+}
+
+.finished {
+    background-color: red;
+}
+
+.edit {
+    background-color:  green;
+}
