@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import { General } from './components/General'
+import { Educational } from './components/Educational'
 //import ReactDOM from 'react-dom/client';
 
 class App extends React.Component {
@@ -11,10 +12,15 @@ class App extends React.Component {
       Email : "",
       Name : "",
       Phone : "",
+      Educational : [{
+        school : "",
+        title: "",
+        date: "",
+      }],
     };
   }
   
-  setInput = (event) => {
+  setGeneralInput = (event) => {
     let target = event.target
     this.setState({
       [target.name] : target.value
@@ -22,12 +28,32 @@ class App extends React.Component {
     console.log(this.state)
   }
 
+  addEducational = () => {
+    this.setState({
+      Educational : [...this.state.Educational, {
+        school : "",
+        title: "",
+        date: "",
+      }]
+    })
+    console.log(this.state.Educational)
+  }
+
+  setEducationalInput = (event) => {
+
+  }
+
   render() {
     return (
       <div className='page'>
         <Header />
         <div className='main'>
-          <Edit setInput={this.setInput}/>
+          <Edit 
+          setGeneralInput={this.setGeneralInput}
+          addEducational={this.addEducational}
+          setEducationalInput={this.setEducationalInput}
+          Educational={this.state.Educational}
+          />
           <Finished />
         </div>
         <Footer />
@@ -50,7 +76,19 @@ class Edit extends React.Component {
   render() {
     return (
       <div className='edit'>
-        <General setInput={this.props.setInput} />
+        <General setInput={this.props.setGeneralInput} />
+        <ul>
+          {
+            this.props.Educational.map((item, index) => (
+              <Educational 
+              key={index}
+              addEducational={this.props.addEducational}
+              setEducationalInput={this.props.setEducationalInput}
+              />              
+            ))
+          }
+        </ul>
+
       </div>
     )
   }
