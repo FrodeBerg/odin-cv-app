@@ -8,16 +8,18 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      input : "",
+      Email : "",
+      Name : "",
+      Phone : "",
     };
   }
   
-  setInput = (input) => {
-    input = input.target.value
-    console.log(input)
+  setInput = (event) => {
+    let target = event.target
     this.setState({
-      input : input
+      [target.name] : target.value
     })
+    console.log(this.state)
   }
 
   render() {
