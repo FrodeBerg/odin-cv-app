@@ -93,7 +93,7 @@ class Edit extends React.Component {
   render() {
     return (
       <div className='edit'>
-        <General setInput={this.props.setGeneralInput} />
+        <General setInput={this.props.setGeneralInput} value={this.props} />
         <ul>
           {
             this.props.Educational.map((item, index) => (
