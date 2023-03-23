@@ -1,80 +1,66 @@
 import './App.css';
 import React from 'react';
 import { General } from './components/General'
-import { Educational } from './components/Educational';
-import { Practical } from './components/Practical'
+import { Educational } from './components/Educational'
+import { Practical } from './components/Practical';
 //import ReactDOM from 'react-dom/client';
 
 class App extends React.Component {
   
   constructor() {
     super();
-    this.Practical = {
-      company : "",
-      position : "",
-      tasks : "",
-      time : "", 
-    }
     this.Educational = {
       school : "",
       title: "",
       date: "",
     }
+    this.Practical = {
+      company : "",
+      position : "", 
+      tasks : "", 
+      time : "", 
+    }
+    this.General = {
+      email : "", 
+      name : "", 
+      phone : "", 
+    }
+    this.functions = {}
     this.state = {
-      Email : "",
-      Name : "",
-      Phone : "",
+      General : [this.General],
       Educational : [Object.assign({}, this.Educational)],
-      Practical : [Object.assign({}, this.Practical)]
+      Practical : [Object.assign({}, this.Practical)],
     };
   }
-  
-  setGeneralInput = (event) => {
-    let target = event.target
-    this.setState({
-      [target.name] : target.value
-    })
+
+  getParent(element, depth){
+    if (depth <= 0) return element
+    return this.getParent(element.parentNode, depth-1)
   }
 
-  addEducational = () => {
-    this.addExperience("Educational")
-  }
-  addPractical = () => {
-    this.addExperience("Practical")
-  }
-
-  removeEducational = (event) => {
-    const id = +event.target.parentNode.id
-    this.removeExperience(id, "Educational")
-  }
-  removePractical = (event) => {
-    const id = +event.target.parentNode.id
-    this.removeExperience(id, "Practical")
-  }
-
-  setEducationalInput = (event) => {
-    this.setExperienceInput(event.target, "Educational")
-  }
-  setPracticalInput = (event) => {
-    this.setExperienceInput(event.target, "Practical")
-  }
-
-  addExperience(category) {
+  addCategory = event => {
+    const category = event.target.parentNode.id
     this.setState({
       [category] : [...this.state[category], Object.assign({}, this[category])]
     })
   }
 
-  removeExperience(id, category) {
+  removeCategory = event => {
+    const target = event.target
+    const id = +this.getParent(target, 1).id
+    const category = this.getParent(target, 4).id
     this.setState({
-      [category] : this.state[category].filter((_, index) => index !== id)
+      [category] : this.state[category].filter((_, index) => {return index !== id})
     })
   }
 
-  setExperienceInput(target, category) {
-    let id = +target.parentNode.parentNode.id
+  setInput = event => {
+    const target = event.target
+    const category = this.getParent(target, 5).id
+    let id = +this.getParent(target, 2).id
+    console.log(this.state[category])
     this.setState({
-      [category] : this.state.Educational.map((item, index) => {
+      [category] : this.state[category].map((item, index) => {
         if (id === index) {
           item[target.name] = target.value;
         }
@@ -89,15 +75,14 @@ class App extends React.Component {
         <Header />
         <div className='main'>
           <Edit 
-              setGeneralInput = {this.setGeneralInput}
-              addEducational = {this.addEducational}
-              addPractical = {this.addPractical}
-              removeEducational = {this.removeEducational}
-              removePractical= {this.removePractical}
-              setEducationalInput = {this.setEducationalInput}
-              setPracticalInput = {this.setPracticalInput}
-          Educational={this.state.Educational}
-          Practical={this.state.Practical}
+          functions={{
+            setInput : this.setInput,
+            remove : this.removeCategory,
+            addCategory : this.addCategory,
+          }}
+          general={this.state.General}
+          educational={this.state.Educational}
+          practical={this.state.Practical}
           />
           <Finished />
         </div>
@@ -117,40 +102,50 @@ class Finished extends React.Component {
   }
 }
 class Edit extends React.Component {
+  constructor(props) {
+    super()
+    this.props = props
+  }
   render() {
     return (
       <div className='edit'>
-        <General setInput={this.props.setGeneralInput} value={this.props} />
-        <h3>Educational Experience:</h3>
+        <Category id="General" title="General" category={this.props.general} functions={this.props.functions} component={General}/>
+        <Category id="Educational" title="Educational Experience:" category={this.props.educational} functions={this.props.functions} component={Educational}/>
+        <Category id="Practical" title="Practical Experience: " category={this.props.practical} functions={this.props.functions} component={Practical}/>
+      </div>
+    )
+  }
+}
+
+class Category extends React.Component {
+  constructor(props) {
+    super()
+    this.props = props
+    console.log(this.props.category)
+  }
+  render() {
+    return (
+      <div id={this.props.id}>
+        <h3>{this.props.title}</h3>
         <ul>
           {
-            this.props.Educational.map((item, index) => (
-              <Educational 
-              key={index}
-              identifiers={index}
-              removeEducational={this.props.removeEducational}
-              setEducationalInput={this.props.setEducationalInput}
-              value={item}
-              />              
+            this.props.category.map((item, index) => (
+              <li key={index}>
+                < this.props.component 
+                identifier={index}
+                value={item}
+                remove={this.props.functions.remove}
+                setInput={this.props.functions.setInput}
+                />
+              </li>
             ))
           }
         </ul>
-        <button onClick={this.props.addEducational}>Add</button>
-        <h3>Practical Experience</h3>
-        <ul>
-          {
-            this.props.Practical.map((item, index) => (
-              <Practical 
-              identifiers={index}
-              key={index}
-              removePractical={this.props.removePractical}
-              setPracticalInput={this.props.setPracticalInput}
-              value={item}
-              />              
-            ))
-          }
-        </ul>
-        <button onClick={this.props.addPractical}>Add</button>
+        {
+          this.props.title !== "General" ? 
+          <button onClick={this.props.functions.addCategory}>Add</button> :
+          ""
+        }
       </div>
     )
   }
