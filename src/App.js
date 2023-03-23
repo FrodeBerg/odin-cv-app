@@ -39,6 +39,14 @@ class App extends React.Component {
     console.log(this.state.Educational)
   }
 
+  removeEducational = (event) => {
+    let id = +event.target.parentNode.id
+    this.setState({
+      Educational : this.state.Educational.filter((_, index) => index !== id)
+    })
+    console.log(this.state.Educational.filter((_, index) => index !== id))
+  }
+
   setEducationalInput = (event) => {
 
   }
@@ -51,6 +59,7 @@ class App extends React.Component {
           <Edit 
           setGeneralInput={this.setGeneralInput}
           addEducational={this.addEducational}
+          removeEducational={this.removeEducational}
           setEducationalInput={this.setEducationalInput}
           Educational={this.state.Educational}
           />
@@ -82,12 +91,14 @@ class Edit extends React.Component {
             this.props.Educational.map((item, index) => (
               <Educational 
               key={index}
-              addEducational={this.props.addEducational}
+              identifiers={index}
+              removeEducational={this.props.removeEducational}
               setEducationalInput={this.props.setEducationalInput}
               />              
             ))
           }
         </ul>
+        <button onClick={this.props.addEducational}>Add</button>
 
       </div>
     )
