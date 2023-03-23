@@ -1,22 +1,31 @@
 import './App.css';
 import React from 'react';
 import { General } from './components/General'
-import { Educational } from './components/Educational'
+import { Educational } from './components/Educational';
+import { Practical } from './components/Practical'
 //import ReactDOM from 'react-dom/client';
 
 class App extends React.Component {
   
   constructor() {
     super();
+    this.Practical = {
+      company : "",
+      position : "",
+      tasks : "",
+      time : "", 
+    }
+    this.Educational = {
+      school : "",
+      title: "",
+      date: "",
+    }
     this.state = {
       Email : "",
       Name : "",
       Phone : "",
-      Educational : [{
-        school : "",
-        title: "",
-        date: "",
-      }],
+      Educational : [Object.assign({}, this.Educational)],
+      Practical : [Object.assign({}, this.Practical)]
     };
   }
   
@@ -29,6 +38,9 @@ class App extends React.Component {
 
   addEducational = () => {
     this.addExperience("Educational")
+  }
+  addPractical = () => {
+    this.addExperience("Practical")
   }
 
   removeEducational = (event) => {
@@ -49,11 +61,7 @@ class App extends React.Component {
 
   addExperience(category) {
     this.setState({
-      [category] : [...this.state.Educational, {
-        school : "",
-        title: "",
-        date: "",
-      }]
+      [category] : [...this.state[category], Object.assign({}, this[category])]
     })
   }
 
@@ -81,11 +89,15 @@ class App extends React.Component {
         <Header />
         <div className='main'>
           <Edit 
-          setGeneralInput={this.setGeneralInput}
-          addEducational={this.addEducational}
-          removeEducational={this.removeEducational}
-          setEducationalInput={this.setEducationalInput}
+              setGeneralInput = {this.setGeneralInput}
+              addEducational = {this.addEducational}
+              addPractical = {this.addPractical}
+              removeEducational = {this.removeEducational}
+              removePractical= {this.removePractical}
+              setEducationalInput = {this.setEducationalInput}
+              setPracticalInput = {this.setPracticalInput}
           Educational={this.state.Educational}
+          Practical={this.state.Practical}
           />
           <Finished />
         </div>
@@ -105,7 +117,6 @@ class Finished extends React.Component {
   }
 }
 class Edit extends React.Component {
-
   render() {
     return (
       <div className='edit'>
@@ -125,7 +136,21 @@ class Edit extends React.Component {
           }
         </ul>
         <button onClick={this.props.addEducational}>Add</button>
-
+        <h3>Practical Experience</h3>
+        <ul>
+          {
+            this.props.Practical.map((item, index) => (
+              <Practical 
+              identifiers={index}
+              key={index}
+              removePractical={this.props.removePractical}
+              setPracticalInput={this.props.setPracticalInput}
+              value={item}
+              />              
+            ))
+          }
+        </ul>
+        <button onClick={this.props.addPractical}>Add</button>
       </div>
     )
   }
