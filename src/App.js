@@ -25,7 +25,6 @@ class App extends React.Component {
     this.setState({
       [target.name] : target.value
     })
-    console.log(this.state)
   }
 
   addEducational = () => {
@@ -44,11 +43,20 @@ class App extends React.Component {
     this.setState({
       Educational : this.state.Educational.filter((_, index) => index !== id)
     })
-    console.log(this.state.Educational.filter((_, index) => index !== id))
   }
 
   setEducationalInput = (event) => {
-
+    let id = +event.target.parentNode.id
+    let target = event.target
+    this.setState({
+      Educational : this.state.Educational.map((item, index) => {
+        if (id === index) {
+          item[target.name] = target.value;
+        }
+        return item
+      })
+    })
+    console.log(this.state.Educational)
   }
 
   render() {
@@ -94,6 +102,7 @@ class Edit extends React.Component {
               identifiers={index}
               removeEducational={this.props.removeEducational}
               setEducationalInput={this.props.setEducationalInput}
+              value={item}
               />              
             ))
           }
