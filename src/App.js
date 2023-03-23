@@ -28,35 +28,51 @@ class App extends React.Component {
   }
 
   addEducational = () => {
+    this.addExperience("Educational")
+  }
+
+  removeEducational = (event) => {
+    const id = +event.target.parentNode.id
+    this.removeExperience(id, "Educational")
+  }
+  removePractical = (event) => {
+    const id = +event.target.parentNode.id
+    this.removeExperience(id, "Practical")
+  }
+
+  setEducationalInput = (event) => {
+    this.setExperienceInput(event.target, "Educational")
+  }
+  setPracticalInput = (event) => {
+    this.setExperienceInput(event.target, "Practical")
+  }
+
+  addExperience(category) {
     this.setState({
-      Educational : [...this.state.Educational, {
+      [category] : [...this.state.Educational, {
         school : "",
         title: "",
         date: "",
       }]
     })
-    console.log(this.state.Educational)
   }
 
-  removeEducational = (event) => {
-    let id = +event.target.parentNode.id
+  removeExperience(id, category) {
     this.setState({
-      Educational : this.state.Educational.filter((_, index) => index !== id)
+      [category] : this.state[category].filter((_, index) => index !== id)
     })
   }
 
-  setEducationalInput = (event) => {
-    let id = +event.target.parentNode.parentNode.id
-    console.log(event.target.parentNode, id)
-    let target = event.target
+  setExperienceInput(target, category) {
+    let id = +target.parentNode.parentNode.id
     this.setState({
-      Educational : this.state.Educational.map((item, index) => {
+      [category] : this.state.Educational.map((item, index) => {
         if (id === index) {
           item[target.name] = target.value;
         }
         return item
       })
-    })
+    })  
   }
 
   render() {
@@ -94,6 +110,7 @@ class Edit extends React.Component {
     return (
       <div className='edit'>
         <General setInput={this.props.setGeneralInput} value={this.props} />
+        <h3>Educational Experience:</h3>
         <ul>
           {
             this.props.Educational.map((item, index) => (
