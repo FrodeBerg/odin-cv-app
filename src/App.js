@@ -46,7 +46,8 @@ class App extends React.Component {
   }
 
   setEducationalInput = (event) => {
-    let id = +event.target.parentNode.id
+    let id = +event.target.parentNode.parentNode.id
+    console.log(event.target.parentNode, id)
     let target = event.target
     this.setState({
       Educational : this.state.Educational.map((item, index) => {
@@ -56,7 +57,6 @@ class App extends React.Component {
         return item
       })
     })
-    console.log(this.state.Educational)
   }
 
   render() {
