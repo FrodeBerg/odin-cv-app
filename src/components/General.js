@@ -1,4 +1,5 @@
 import React from "react";
+import { InputField } from "./InputField";
 
 export class General extends React.Component {
 
@@ -13,17 +14,3 @@ export class General extends React.Component {
     }
 }
 
-class InputField extends React.Component {
-
-    render() {
-        return (
-            <div>
-                <label htmlFor={this.props.field}>{this.props.title}</label>
-                <input
-                name={this.props.field} 
-                onChange={this.props.function}
-                />
-            </div>            
-        )
-    }
-}
